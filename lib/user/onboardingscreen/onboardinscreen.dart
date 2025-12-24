@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:project1/user/login/login.dart';
 import 'package:project1/user/onboardingscreen/widgets/header.dart';
 import 'package:project1/user/onboardingscreen/widgets/next_page_button.dart';
 import 'package:project1/user/onboardingscreen/widgets/onboarding_page_indicator.dart';
@@ -57,10 +58,10 @@ class _OnboardingState extends State<OnboardingScreen >
   }
 
   _goToLogin() {
-    //Navigator.pushReplacement(
-      //  context, MaterialPageRoute(builder: (context) => Login()));
-    // Navigator.pushReplacement(
-    //     context, MaterialPageRoute(builder: (context) => AdminLoginScreen()));
+    Navigator.pushReplacement(
+        context, MaterialPageRoute(builder: (context) => LoginScreen()));
+     // Navigator.pushReplacement(
+     //     context, MaterialPageRoute(builder: (context) => AdminLoginScreen()));
 
 
   }
