@@ -43,7 +43,7 @@ class CategoryPage extends State<Category>
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("${widget.category_name}".toUpperCase(),
+        title: Text("${widget.category_name} aa".toUpperCase(),
             style: TextStyle(fontStyle: FontStyle.italic, color: Colors.black)),
         backgroundColor: kGold,
       ),
