@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:project1/user/login/login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../Screens/home.dart';
 import '../constants.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -19,7 +20,7 @@ class _DashboardScreenState extends State<DashboardScreen>
   int _selectedIndex = 0;
   static List<Widget> _widgetOptions = <Widget>
   [
-    //Home(),
+    Home(),
     //Download(),
   ];
   @override
@@ -52,7 +53,7 @@ class _DashboardScreenState extends State<DashboardScreen>
       ),
       body: Center
         (
-        //child: _widgetOptions.elementAt(_selectedIndex),
+        child: _widgetOptions.elementAt(_selectedIndex),
       ),
       backgroundColor: kLightGold,
       bottomNavigationBar: BottomNavigationBar(
