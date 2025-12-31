@@ -1,10 +1,18 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_gallery_saver_plus/image_gallery_saver_plus.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../constants.dart';
+import 'db/categorydb.dart';
+import 'db/categorydbmodel.dart';
 
 
 class Category extends StatefulWidget
@@ -92,13 +100,13 @@ class ItemsState extends State<Items>
   List list;
   var size;
   String savePath = "";
-
+  DB db = DB();
   ItemsState({required this.list,this.size});
 
   @override
   void initState() {
     // TODO: implement initState
-
+    db = DB();
   }
 
   @override
@@ -164,14 +172,14 @@ class ItemsState extends State<Items>
                         SizedBox(width: size.width * 10 / 100),
                         InkWell(
                           onTap: () {
-                           // _share(list[index]['c_images']);
+                            _share(list[index]['c_images']);
                           },
                           child: Icon(Icons.share, color: Colors.white),
                         ),
                         SizedBox(width: size.width * 17 / 95),
                         InkWell(
                           onTap: () {
-                           // _save(list[index]['c_images']);
+                            _save(list[index]['c_images']);
                           },
                           child: Icon(Icons.download, color: Colors.white),
                         ),
@@ -222,5 +230,63 @@ class ItemsState extends State<Items>
       });
     }
   }
+
+  void _share(list)async
+  {
+    String fileName = list.substring(list.lastIndexOf("/") + 1);
+    final uri = Uri.parse(list);
+    final res = await http.get(uri);
+    final bytes = res.bodyBytes;
+    final temp = await getTemporaryDirectory();
+    final path = '${temp.path}/$fileName';
+    File(path).writeAsBytesSync(bytes);
+    await Share.shareFiles([path]);
+  }
+
+  void _save(list)async
+  {
+    var status = await Permission.manageExternalStorage.request();
+    _onLoad(true);
+    if(status.isGranted)
+    {
+      Future<String> createFolderInAppDocDir(String folderName) async
+      {
+        final Directory _appDocDir = await getApplicationDocumentsDirectory();
+        final Directory _appDocDirFolder =
+        Directory('${_appDocDir.path}/$folderName/');
+        if(await _appDocDirFolder.exists())
+        {
+          return _appDocDirFolder.path;
+        }
+        else
+        {
+          final Directory _appDocDirNewFolder =
+          await _appDocDirFolder.create(recursive: true);
+          return _appDocDirNewFolder.path;
+        }
+
+      }
+      String fileName = list.substring(list.lastIndexOf("/") + 1);
+      savePath = 'storage/emulated/0/Pictures/$fileName';
+      db.insertData(CategoryModel(url: savePath));
+
+      var response = await Dio()
+          .get(list, options: Options(responseType: ResponseType.bytes));
+      ImageGallerySaverPlus.saveImage(Uint8List.fromList(response.data), name: fileName);
+
+
+      Fluttertoast.showToast(
+          msg: "Image Downloaded Successfully",
+          toastLength: Toast.LENGTH_LONG,
+          timeInSecForIosWeb: 1);
+
+      _onLoadExit(true);
+    }
+    else
+    {
+      print("permission not granted");
+    }
+  }
+
 
 }
