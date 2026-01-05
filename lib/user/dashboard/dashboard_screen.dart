@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:project1/user/login/login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../Screens/download.dart';
 import '../Screens/home.dart';
 import '../constants.dart';
 
@@ -21,7 +22,7 @@ class _DashboardScreenState extends State<DashboardScreen>
   static List<Widget> _widgetOptions = <Widget>
   [
     Home(),
-    //Download(),
+    Download(),
   ];
   @override
   void initState()
@@ -90,6 +91,9 @@ class _DashboardScreenState extends State<DashboardScreen>
 
   void _onItemTapped(int value)
   {
-
+    setState(() {
+      _selectedIndex = value;
+      print(_selectedIndex);
+    });
   }
 }

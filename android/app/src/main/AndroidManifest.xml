@@ -8,6 +8,7 @@
         android:name="android.permission.MANAGE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/>
     <uses-permission android:name="android.permission.READ_MEDIA_VIDEO"/>
+
     <application
         android:label="project1"
         android:name="${applicationName}"
